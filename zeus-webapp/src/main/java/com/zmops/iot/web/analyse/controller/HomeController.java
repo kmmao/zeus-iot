@@ -2,6 +2,7 @@ package com.zmops.iot.web.analyse.controller;
 
 import com.zmops.iot.model.response.ResponseData;
 import com.zmops.iot.web.analyse.service.HomeService;
+import com.zmops.iot.web.analyse.service.ZbxChartsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,14 +23,34 @@ public class HomeController {
     @Autowired
     HomeService homeService;
 
+    @Autowired
+    ZbxChartsService zbxChartsService;
+
+    /**
+     * 设备数量统计
+     */
+    @RequestMapping("/deviceNum")
+    public ResponseData getDeviceNum() {
+        return ResponseData.success(homeService.getDeviceNum());
+    }
+
+    /**
+     * 告警数量统计
+     */
+    @RequestMapping("/alarmNum")
+    public ResponseData getAlarmNum(@RequestParam("timeFrom") long timeFrom, @RequestParam("timeTill") long timeTill) {
+        return ResponseData.success(homeService.getAlarmNum(timeFrom, timeTill));
+    }
+
+
     /**
      * 服务器取数速率
      *
      * @return
      */
     @RequestMapping("/collectonRate")
-    public ResponseData collectonRate() {
-        return ResponseData.success(homeService.collectonRate());
+    public ResponseData collectonRate(@RequestParam("timeFrom") long timeFrom, @RequestParam("timeTill") long timeTill) {
+        return ResponseData.success(homeService.collectonRate(timeFrom, timeTill));
     }
 
     /**
@@ -49,6 +70,6 @@ public class HomeController {
                           @RequestParam("attrIds") List<Long> attrIds,
                           @RequestParam("width") String width,
                           @RequestParam("height") String height) {
-        homeService.getCharts(response, from, to, attrIds, width, height);
+        zbxChartsService.getCharts(response, from, to, attrIds, width, height);
     }
 }

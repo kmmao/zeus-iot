@@ -139,6 +139,8 @@ public enum BizExceptionEnum implements AbstractBaseExceptionEnum {
      * 属性相关
      */
     PRODUCT_ATTR_KEY_EXISTS(1401, "该属性Key已存在"),
+    PRODUCT_ATTR_DEPTED_NULL(1402,"依赖的属性不能为空"),
+    PRODUCT_ATTR_DEPTED_NOT_EXIST(1403,"依赖的属性不能为空"),
 
     /**
      * 设备相关
@@ -151,6 +153,12 @@ public enum BizExceptionEnum implements AbstractBaseExceptionEnum {
      */
     SERVICE_EXISTS(1601, "服务已存在"),
     SERVICE_NOT_EXISTS(1602, "服务不存在"),
+
+    /**
+     * 触发规则相关
+     */
+    RULE_NOT_EXISTS(1701, "上下线规则不存在"),
+    RULE_EXISTS(1702, "上下线规则已存在"),
 
     /**
      * 租户相关的异常

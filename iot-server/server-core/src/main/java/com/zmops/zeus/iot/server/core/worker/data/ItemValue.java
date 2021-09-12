@@ -1,7 +1,12 @@
 package com.zmops.zeus.iot.server.core.worker.data;
 
+import afu.org.checkerframework.checker.igj.qual.I;
+import com.zmops.zeus.iot.server.core.camel.IOTDeviceValue;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author nantian created at 2021/8/23 15:15
@@ -19,14 +24,16 @@ public class ItemValue implements Item {
     // Zabbix 会根据配置的ITEM 类型，进行转换，如果失败就报错
     private String value;
 
-    private Long clock; // 毫秒，如果为 Null，则 zabbix 以接收时间为准
+    private Long clock; // 秒，如果为 Null，则 zabbix 以接收时间为准
 
     private Long ns; // 纳秒，如果为 Null，则 zabbix 以接收时间为准
 
-    public ItemValue(String host, String key, String value) {
+
+    public ItemValue(String host, Long clock) {
         this.host = host;
-        this.key = key;
-        this.value = value;
+        if (clock != null) {
+            this.clock = clock;
+        }
     }
 
     /**

@@ -43,6 +43,9 @@ public class ProductAttr {
     private Long depAttrId;
 
     @JsonIgnore
+    private String masterItemId;
+
+    @JsonIgnore
     private String zbxId;
 
     @NotNull(groups = {BaseEntity.Update.class, BaseEntity.Create.class})
@@ -94,9 +97,8 @@ public class ProductAttr {
                     paramStr.append(param).append("\\\\n");
                 }
                 return paramStr.substring(0, paramStr.length() - 3);
-            } else {
-                return "";
             }
+            return "";
         }
     }
 }

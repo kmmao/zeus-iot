@@ -1,6 +1,5 @@
 package com.zmops.zeus.iot.server.core.camel.process;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.zmops.zeus.iot.server.core.camel.IOTDeviceValue;
 import com.zmops.zeus.iot.server.core.worker.data.ItemValue;
@@ -30,15 +29,15 @@ public class JsonToItemValueProcess implements Processor {
         String      inputContext = this.analysisMessage(bodyStream);
 
 
-        List<IOTDeviceValue> valueList = gson.fromJson(inputContext, new TypeToken<List<IOTDeviceValue>>() {}.getType());
+        IOTDeviceValue iotValue = gson.fromJson(inputContext, IOTDeviceValue.class);
 
-        // 多一步 命名转换，方便 Json 字段理解
         List<ItemValue> itemValueList = new ArrayList<>();
-        valueList.forEach(i -> {
-            ItemValue item = new ItemValue(i.getDeviceId(), i.getDeviceAttrKey(), i.getDeviceAttrValue());
-            if (i.getDeviceTime() != null) {
-                item.setClock(i.getDeviceTime());
-            }
+
+        iotValue.getAttributes().forEach((key, value) -> {
+            ItemValue item = new ItemValue(iotValue.getDeviceId(), iotValue.getClock());
+            item.setKey(key);
+            item.setValue(value);
+
             itemValueList.add(item);
         });
 

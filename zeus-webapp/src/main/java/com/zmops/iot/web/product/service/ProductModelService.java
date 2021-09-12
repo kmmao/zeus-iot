@@ -76,7 +76,7 @@ public class ProductModelService {
      * @param productAttr
      * @return
      */
-    public List<ProductAttribute> list(ProductAttrParam productAttr) {
+    public List<ProductAttrDto> list(ProductAttrParam productAttr) {
         QProductAttribute qProductAttribute = new QProductAttribute();
         if (null != productAttr.getProdId()) {
             qProductAttribute.productId.eq(productAttr.getProdId());
@@ -87,7 +87,7 @@ public class ProductModelService {
         if (ToolUtil.isNotEmpty(productAttr.getKey())) {
             qProductAttribute.key.contains(productAttr.getKey());
         }
-        return qProductAttribute.orderBy(" create_time desc").findList();
+        return qProductAttribute.orderBy(" create_time desc").asDto(ProductAttrDto.class).findList();
     }
 
     /**
@@ -200,7 +200,7 @@ public class ProductModelService {
         }
 
         return zbxItem.createTrapperItem(itemName, productAttr.getKey(),
-                hostId, productAttr.getSource(),productAttr.getValueType(), productAttr.getUnits(), processingSteps, productAttr.getValuemapid(), tagMap);
+                hostId, productAttr.getSource(), productAttr.getMasterItemId(), productAttr.getValueType(), productAttr.getUnits(), processingSteps, productAttr.getValuemapid(), tagMap);
     }
 
     /**
@@ -237,11 +237,11 @@ public class ProductModelService {
 
 
         zbxItem.updateTrapperItem(productAttribute.getZbxId(), productAttr.getAttrId() + "", productAttr.getKey(),
-                hostId, productAttr.getSource(),productAttr.getValueType(), productAttr.getUnits(), processingSteps, productAttr.getValuemapid(), tagMap);
+                hostId, productAttr.getSource(), productAttr.getMasterItemId(), productAttr.getValueType(), productAttr.getUnits(), processingSteps, productAttr.getValuemapid(), tagMap);
 
         DB.update(productAttribute);
 
-        WorkerWrapper<ProductAttr, Boolean> updateProdAttrWork = WorkerWrapper.<ProductAttr, Boolean>builder().worker(updateProdAttrWorker).build();
+        WorkerWrapper<ProductAttr, Boolean> updateProdAttrWork = WorkerWrapper.<ProductAttr, Boolean>builder().worker(updateProdAttrWorker).param(productAttr).build();
 
         try {
             Async.work(100, updateProdAttrWork).awaitFinish();
